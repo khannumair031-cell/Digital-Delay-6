@@ -21,11 +21,17 @@ jobs:
         with:
           gradle-version: '8.9'
 
+      - name: Find project
+        run: |
+          find . -name settings.gradle -o -name settings.gradle.kts
+
       - name: Build APK
-        run: gradle :app:assembleDebug --no-daemon
+        run: |
+          cd DD6-NUMAIR-2026
+          gradle :app:assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: DD6-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          path: DD6-NUMAIR-2026/app/build/outputs/apk/debug/*.apk
