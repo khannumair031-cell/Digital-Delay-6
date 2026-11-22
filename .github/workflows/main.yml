@@ -17,8 +17,18 @@ jobs:
       - name: Fix MainActivity
         run: |
           FILE=$(find project -name MainActivity.java | head -1)
-          echo "Found: $FILE"
           sed -i 's/WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);/WebView.setWebContentsDebuggingEnabled(true);/' "$FILE"
+
+      - name: Fix Kotlin duplicate libraries
+        run: |
+          FILE=$(find project -name build.gradle | grep '/app/' | head -1)
+          cat >> "$FILE" <<'EOF'
+
+          configurations.all {
+              exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
+              exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+          }
+          EOF
 
       - name: Setup Java
         uses: actions/setup-java@v4
