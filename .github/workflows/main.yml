@@ -12,8 +12,13 @@ jobs:
 
       - name: Extract project ZIP
         run: |
-          unzip -o *.zip -d project
-          find project -name settings.gradle -print
+          unzip -o DD6-NUMAIR-2026-test-ready.zip -d project
+
+      - name: Fix MainActivity
+        run: |
+          FILE=$(find project -name MainActivity.java | head -1)
+          echo "Found: $FILE"
+          sed -i 's/WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);/WebView.setWebContentsDebuggingEnabled(true);/' "$FILE"
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -36,4 +41,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: DD6-debug-apk
-          path: "**/app/build/outputs/apk/debug/*.apk"
+          path: "project/**/app/build/outputs/apk/debug/*.apk"
